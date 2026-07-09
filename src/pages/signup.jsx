@@ -1,10 +1,16 @@
+import "../styles/Auth.css";
+import { useNavigate } from "react-router-dom";
+
 function Signup() {
+    const navigate = useNavigate();
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Create Your Account 🚀</h1>
+        <h1>Create Account 🚀</h1>
 
-        <p>Start organizing your life with LifeOS.</p>
+        <p className="auth-subtitle">
+          Join LifeOS and organize your entire life.
+        </p>
 
         <input
           type="text"
@@ -21,10 +27,14 @@ function Signup() {
           placeholder="Create Password"
         />
 
-        <button>Create Account</button>
+        <button className="auth-btn">
+          Create Account
+        </button>
 
-        <p>
-          Already have an account? <span>Sign In</span>
+        <p className="auth-switch">
+          Already have an account? <span onClick={() => navigate("/login")}>
+  Sign In
+</span>
         </p>
       </div>
     </div>

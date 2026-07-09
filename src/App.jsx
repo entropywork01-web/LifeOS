@@ -4,6 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import DashboardPreview from "./components/DashboardPreview";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
 
 function Home() {
   const navigate = useNavigate();
@@ -58,10 +59,11 @@ function Home() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-    </Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/dashboard" element={<Dashboard />} />
+</Routes>
   );
 }
 
