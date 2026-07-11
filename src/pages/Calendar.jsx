@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { LifeOSContext } from "../context/LifeOSContext";
 import "../styles/Dashboard.css";
 
 function Calendar() {
   const [event, setEvent] = useState("");
-  const [events, setEvents] = useState([]);
+  const { events, setEvents } = useContext(LifeOSContext);
 
   function addEvent() {
     if (event.trim() === "") return;

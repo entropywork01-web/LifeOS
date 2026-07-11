@@ -1,25 +1,16 @@
+import "../styles/Dashboard.css";
+
 function StatsCard({ icon, title, value }) {
   return (
-    <div className="dashboard-box">
-      <div
-        style={{
-          fontSize: "36px",
-          marginBottom: "15px",
-        }}
-      >
+    <div className="stats-card">
+      <div className="stats-icon">
         {icon}
       </div>
 
-      <h3>{title}</h3>
-
-      <h2
-        style={{
-          marginTop: "10px",
-          color: "#60A5FA",
-        }}
-      >
-        {value}
-      </h2>
+      <div className="stats-content">
+        <h3>{title}</h3>
+        <h2>{value}</h2>
+      </div>
     </div>
   );
 }

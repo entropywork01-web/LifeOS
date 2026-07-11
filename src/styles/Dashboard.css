@@ -1,61 +1,238 @@
 .dashboard-page {
   display: flex;
   min-height: 100vh;
-  background: #0F172A;
-  color: white;
+  background: #0f172a;
+  color: #f8fafc;
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* Sidebar */
 .sidebar {
   width: 260px;
   background: #111827;
   padding: 30px 20px;
+  border-right: 1px solid #1e293b;
 }
 
 .sidebar h2 {
   margin-bottom: 40px;
   font-size: 28px;
+  font-weight: 700;
+  color: #fff;
 }
 
 .sidebar ul {
   list-style: none;
+  padding: 0;
 }
 
 .sidebar li {
+  margin-bottom: 12px;
+}
+
+.sidebar a {
+  display: block;
+  text-decoration: none;
+  color: #cbd5e1;
   padding: 14px 16px;
-  margin-bottom: 10px;
   border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s;
 }
 
-.sidebar li:hover {
-  background: rgba(255,255,255,0.08);
+.sidebar a:hover,
+.sidebar a.active {
+  background: #3b82f6;
+  color: white;
 }
 
+/* Main */
 .dashboard-content {
   flex: 1;
   padding: 40px;
+  overflow-y: auto;
 }
 
-.dashboard-content h1 {
-  margin-bottom: 30px;
+.dashboard {
+  max-width: 1400px;
+  margin: auto;
 }
 
+/* Hero */
+.hero-section {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 35px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section h1 {
+  margin: 0;
+  font-size: 40px;
+}
+
+.hero-subtitle {
+  margin-top: 12px;
+  color: #e2e8f0;
+  font-size: 18px;
+}
+
+.today-date {
+  margin-top: 18px;
+  font-size: 16px;
+  color: #f8fafc;
+}
+
+/* Section */
+.section-title {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+/* Cards Grid */
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+/* Stats Card */
+.stats-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 18px;
+  padding: 24px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.stats-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+.stats-icon {
+  font-size: 42px;
+  margin-bottom: 16px;
+}
+
+.stats-content h3 {
+  color: #94a3b8;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.stats-content h2 {
+  font-size: 32px;
+  color: #ffffff;
+}
+
+/* Summary */
+.summary-card {
+  background: #1e293b;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #334155;
+}
+
+.summary-card h2 {
+  margin-bottom: 24px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
   gap: 20px;
 }
 
-.dashboard-box {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 30px;
-  min-height: 180px;
-  transition: 0.3s;
+.summary-grid div {
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid #334155;
 }
 
-.dashboard-box:hover {
-  transform: translateY(-5px);
+.summary-grid h3 {
+  color: #94a3b8;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.summary-grid p {
+  font-size: 28px;
+  font-weight: bold;
+  color: #60a5fa;
+}
+
+/* Old cards (used by other pages) */
+.card {
+  background: #1e293b;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #334155;
+}
+
+.card input,
+.card select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: white;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.card button {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card button:hover {
+  background: #2563eb;
+}
+
+.total-expenses-card {
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 20px 0;
+  text-align: center;
+  border: 1px solid #334155;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+
+  .hero-section {
+    padding: 25px;
+  }
+
+  .hero-section h1 {
+    font-size: 30px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
 }

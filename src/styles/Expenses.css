@@ -1,0 +1,109 @@
+.dashboard-page {
+  display: flex;
+  min-height: 100vh;
+  background: #0F172A;
+  color: white;
+}
+
+.sidebar {
+  width: 260px;
+  background: #111827;
+  padding: 30px 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 40px;
+  font-size: 28px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 40px;
+}
+
+.dashboard-content h1 {
+  margin-bottom: 30px;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.dashboard-box {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 30px;
+  min-height: 180px;
+  transition: 0.3s;
+}
+
+.dashboard-box:hover {
+  transform: translateY(-5px);
+}
+.total-expenses-card {
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 20px 0;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #334155;
+}
+.card {
+  background: #1e293b;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #334155;
+}
+
+.card input,
+.card select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: white;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.card button {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card button:hover {
+  background: #2563eb;
+}

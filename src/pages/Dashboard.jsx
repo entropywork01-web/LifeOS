@@ -1,94 +1,130 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Layout from "../components/Layout";
 import StatsCard from "../components/StatsCard";
 import { LifeOSContext } from "../context/LifeOSContext";
 import "../styles/Dashboard.css";
 
 function Dashboard() {
-  const { tasks, notes, events, goals } = useContext(LifeOSContext);
-  const [message, setMessage] = useState("");
+  const { tasks, notes, events, goals, expenses } =
+    useContext(LifeOSContext);
 
-  const hour = new Date().getHours();
+  const totalSpent = expenses.reduce(
+    (sum, item) => sum + item.amount,
+    0
+  );
 
-  let greeting = "Good Evening";
-
-  if (hour < 12) {
-    greeting = "Good Morning";
-  } else if (hour < 18) {
-    greeting = "Good Afternoon";
-  }
+  const today = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <Layout>
-      <h1>{greeting}, Co-Founder 👋</h1>
+      <div className="dashboard">
 
-      <p
-        style={{
-          color: "#94A3B8",
-          marginBottom: "30px",
-        }}
-      >
-        Welcome back to your LifeOS.
-      </p>
+        {/* Hero Section */}
+        <div className="hero-section">
+          <div>
+            <h1>👋 Welcome Back!</h1>
 
-      <div className="dashboard-cards">
-        <StatsCard
-          icon="✅"
-          title="Tasks"
-          value={tasks.length}
-        />
+            <p className="hero-subtitle">
+              Your AI-powered personal operating system.
+            </p>
 
-        <StatsCard
-          icon="📅"
-          title="Events"
-          value={events.length}
-        />
+            <p className="today-date">
+              📅 {today}
+            </p>
+          </div>
+        </div>
 
-        <StatsCard
-          icon="📝"
-          title="Notes"
-          value={notes.length}
-        />
+        {/* Overview */}
+        <h2 className="section-title">
+          Overview
+        </h2>
 
-        <StatsCard
-          icon="🎯"
-          title="Goals"
-          value={goals.length}
-        />
+        <div className="dashboard-cards">
+
+          <StatsCard
+            icon="✅"
+            title="Tasks"
+            value={tasks.length}
+          />
+
+          <StatsCard
+            icon="📝"
+            title="Notes"
+            value={notes.length}
+          />
+
+          <StatsCard
+            icon="📅"
+            title="Events"
+            value={events.length}
+          />
+
+          <StatsCard
+            icon="🎯"
+            title="Goals"
+            value={goals.length}
+          />
+
+          <StatsCard
+            icon="💰"
+            title="Expenses"
+            value={`₹${totalSpent}`}
+          />
+
+          <StatsCard
+            icon="🚀"
+            title="Productivity"
+            value={
+              tasks.length === 0
+                ? "0%"
+                : `${Math.round(
+                    (goals.length /
+                      Math.max(tasks.length, 1)) *
+                      100
+                  )}%`
+            }
+          />
+
+        </div>
+
+        {/* Quick Summary */}
+
+        <div className="summary-card">
+
+          <h2>✨ Today's Summary</h2>
+
+          <div className="summary-grid">
+
+            <div>
+              <h3>Pending Tasks</h3>
+              <p>{tasks.length}</p>
+            </div>
+
+            <div>
+              <h3>Total Expenses</h3>
+              <p>₹{totalSpent}</p>
+            </div>
+
+            <div>
+              <h3>Goals</h3>
+              <p>{goals.length}</p>
+            </div>
+
+            <div>
+              <h3>Upcoming Events</h3>
+              <p>{events.length}</p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
-
-      <div className="dashboard-box" style={{ marginTop: "30px" }}>
-  <h2>🚀 Today's Focus</h2>
-
-  <p style={{ marginTop: "15px" }}>
-    Build something today that your future self will thank you for.
-  </p>
-
-  <button
-  onClick={() => setMessage("🔥 Let's build your future, one step at a time!")}
-  style={{
-    marginTop: "20px",
-    padding: "12px 20px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "bold",
-  }}
->
-  Start Working
-</button>
-{message && (
-  <p
-    style={{
-      marginTop: "20px",
-      color: "#22c55e",
-      fontWeight: "bold",
-    }}
-  >
-    {message}
-  </p>
-)}
-</div>
     </Layout>
   );
 }

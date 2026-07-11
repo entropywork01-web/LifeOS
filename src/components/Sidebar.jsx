@@ -31,7 +31,7 @@ function Sidebar() {
         </li>
 
         <li>
-          <NavLink to="/ai">🤖 AI Assistant</NavLink>
+          <NavLink to="/assistant">🤖 AI Assistant</NavLink>
         </li>
       </ul>
     </aside>

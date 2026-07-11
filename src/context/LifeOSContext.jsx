@@ -5,26 +5,32 @@ export const LifeOSContext = createContext();
 function LifeOSProvider({ children }) {
   // Tasks
   const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("lifeos_tasks");
-    return savedTasks ? JSON.parse(savedTasks) : [];
+    const saved = localStorage.getItem("lifeos_tasks");
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Notes
   const [notes, setNotes] = useState(() => {
-    const savedNotes = localStorage.getItem("lifeos_notes");
-    return savedNotes ? JSON.parse(savedNotes) : [];
+    const saved = localStorage.getItem("lifeos_notes");
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Events
   const [events, setEvents] = useState(() => {
-  const savedEvents = localStorage.getItem("lifeos_events");
-  return savedEvents ? JSON.parse(savedEvents) : [];
-});
+    const saved = localStorage.getItem("lifeos_events");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Goals
   const [goals, setGoals] = useState(() => {
-    const savedGoals = localStorage.getItem("lifeos_goals");
-    return savedGoals ? JSON.parse(savedGoals) : [];
+    const saved = localStorage.getItem("lifeos_goals");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Expenses
+  const [expenses, setExpenses] = useState(() => {
+    const saved = localStorage.getItem("lifeos_expenses");
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Save Tasks
@@ -37,13 +43,21 @@ function LifeOSProvider({ children }) {
     localStorage.setItem("lifeos_notes", JSON.stringify(notes));
   }, [notes]);
 
+  // Save Events
+  useEffect(() => {
+    localStorage.setItem("lifeos_events", JSON.stringify(events));
+  }, [events]);
+
   // Save Goals
   useEffect(() => {
     localStorage.setItem("lifeos_goals", JSON.stringify(goals));
   }, [goals]);
-useEffect(() => {
-  localStorage.setItem("lifeos_events", JSON.stringify(events));
-}, [events]);
+
+  // Save Expenses
+  useEffect(() => {
+    localStorage.setItem("lifeos_expenses", JSON.stringify(expenses));
+  }, [expenses]);
+
   return (
     <LifeOSContext.Provider
       value={{
@@ -55,6 +69,8 @@ useEffect(() => {
         setEvents,
         goals,
         setGoals,
+        expenses,
+        setExpenses,
       }}
     >
       {children}
