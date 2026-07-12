@@ -1,39 +1,51 @@
 import { NavLink } from "react-router-dom";
 
 function Sidebar() {
+  const menuItems = [
+    { icon: "🏠", title: "Dashboard", path: "/dashboard" },
+    { icon: "✅", title: "Tasks", path: "/tasks" },
+    { icon: "📝", title: "Notes", path: "/notes" },
+    { icon: "📅", title: "Calendar", path: "/calendar" },
+    { icon: "🎯", title: "Goals", path: "/goals" },
+    { icon: "💰", title: "Expenses", path: "/expenses" },
+    { icon: "🤖", title: "AI Assistant", path: "/assistant" },
+  ];
+
   return (
     <aside className="sidebar">
-      <h2>LifeOS</h2>
 
-      <ul>
-        <li>
-          <NavLink to="/dashboard">🏠 Dashboard</NavLink>
-        </li>
+      <div className="sidebar-logo">
+        <h1>LifeOS</h1>
+        <p>Your Personal OS</p>
+      </div>
 
-        <li>
-          <NavLink to="/tasks">✅ Tasks</NavLink>
-        </li>
+      <nav className="sidebar-menu">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              isActive ? "sidebar-link active" : "sidebar-link"
+            }
+          >
+            <span className="sidebar-icon">{item.icon}</span>
 
-        <li>
-          <NavLink to="/calendar">📅 Calendar</NavLink>
-        </li>
+            <span>{item.title}</span>
+          </NavLink>
+        ))}
+      </nav>
 
-        <li>
-          <NavLink to="/notes">📝 Notes</NavLink>
-        </li>
+      <div className="sidebar-footer">
+        <div className="streak-card">
+          <h3>🔥 Daily Streak</h3>
+          <p>12 Days</p>
+        </div>
 
-        <li>
-          <NavLink to="/expenses">💰 Expenses</NavLink>
-        </li>
+        <p className="version">
+          LifeOS v0.5
+        </p>
+      </div>
 
-        <li>
-          <NavLink to="/goals">🎯 Goals</NavLink>
-        </li>
-
-        <li>
-          <NavLink to="/assistant">🤖 AI Assistant</NavLink>
-        </li>
-      </ul>
     </aside>
   );
 }
