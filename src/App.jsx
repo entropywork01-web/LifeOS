@@ -7,6 +7,7 @@ import Calendar from "./pages/Calendar";
 import Notes from "./pages/Notes";
 import Goals from "./pages/Goals";
 import Assistant from "./pages/Assistant";
+import Expenses from "./pages/Expenses";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/notes" element={<Notes />} />
       <Route path="/goals" element={<Goals />} />
       <Route path="/assistant" element={<Assistant />} />
+      <Route path="/expenses" element={<Expenses />} />
     </Routes>
   );
 }

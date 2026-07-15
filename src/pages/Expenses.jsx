@@ -98,13 +98,11 @@ function Expenses() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+<Button onClick={addExpense}>
+  Add Expense
+</Button>
 
-          <button onClick={addExpense}>
-            Add Expense
-          </button>
-
-        </div>
-
+</Card>
 
         <div className="card">
           <h2>Your Expenses</h2>
