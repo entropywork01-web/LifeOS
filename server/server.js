@@ -6,13 +6,16 @@ const express = require("express");
 const cors = require("cors");
 
 const assistantRoutes = require("./routes/assistantRoutes");
-
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const plannerRoutes = require("./routes/plannerRoutes");
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api", assistantRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/planner", plannerRoutes);
 
 const PORT = 5000;
 
