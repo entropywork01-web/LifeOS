@@ -22,16 +22,65 @@ function ProductivityChart({ tasks }) {
   const pending = tasks.length - completed;
 
   const data = {
-    labels: ["Completed", "Pending"],
+    labels: [
+      "Completed",
+      "Pending",
+    ],
+
     datasets: [
       {
         label: "Tasks",
         data: [completed, pending],
+        borderRadius: 10,
+        backgroundColor: [
+          "#22c55e",
+          "#ef4444",
+        ],
       },
     ],
   };
 
-  return <Bar data={data} />;
+  const options = {
+    responsive: true,
+
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+
+        ticks: {
+          color: "#cbd5e1",
+        },
+      },
+
+      y: {
+        beginAtZero: true,
+
+        ticks: {
+          color: "#cbd5e1",
+          stepSize: 1,
+        },
+
+        grid: {
+          color: "rgba(255,255,255,.08)",
+        },
+      },
+    },
+  };
+
+  return (
+    <Bar
+      data={data}
+      options={options}
+    />
+  );
 }
 
 export default ProductivityChart;

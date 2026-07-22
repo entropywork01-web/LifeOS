@@ -4,23 +4,44 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-async function chat(data) {
+async function chat({
+  message,
+  tasks,
+  notes,
+  goals,
+  events,
+  expenses,
+
+  currentDate,
+  currentTime,
+
+  completedTasks,
+  pendingTasks,
+  totalTasks,
+
+  totalExpenses,
+  totalGoals,
+  totalNotes,
+  totalEvents,
+}) {
+
   try {
-    const {
-      message,
-      tasks,
-      notes,
-      goals,
-      events,
-      expenses,
-    } = data;
 
     const prompt = `
-You are LifeOS AI, an intelligent personal operating system.
+   You are LifeOS AI, a friendly personal productivity companion.
 
-You help users organize their life.
+Your personality:
+- Talk like a helpful friend, not a robot.
+- Keep replies short and clear.
+- Be warm, supportive and motivating.
+- Use emojis naturally.
+- Avoid unnecessary explanations.
+- Do not repeat dashboard information unless asked.
+- Give practical advice based on the user's LifeOS data.
 
-You have access to the user's complete LifeOS database.
+You help users manage tasks, notes, goals, events and expenses.
+
+When performing actions, always follow the required JSON format exactly.
 
 ==========================
 CURRENT LIFE DATA
@@ -472,15 +493,13 @@ Examples:
 When answering:
 
 - Read the user's LifeOS data.
-- Count items when needed.
-- Summarize information clearly.
-- Mention completed vs pending tasks.
-- Mention upcoming events.
-- Mention goals.
-- Mention expenses if relevant.
+- Answer naturally like a personal companion.
+- Do not dump lists unless the user asks for a summary.
+- Mention only the most relevant information.
+- Give one practical next step.
+- Be encouraging when the user feels lazy, stressed, or unmotivated.
 - Never invent information.
-- Base every answer on the provided data.
-
+- Base answers on the provided data.
 Return:
 
 {
@@ -504,12 +523,15 @@ Return:
       temperature: 0.2,
       max_tokens: 1024,
     });
+const text = completion.choices[0].message.content
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
 
-    const text = completion.choices[0].message.content.trim();
-
-    try {
-      return JSON.parse(text);
-    } catch (err) {
+try {
+  return JSON.parse(text);
+}
+   catch (err) {
       console.log("AI returned non-JSON:", text);
 
       return {

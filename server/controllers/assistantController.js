@@ -5,13 +5,25 @@ async function sendMessage(req, res) {
     console.log("✅ Assistant controller reached");
 
     const {
-      message,
-      tasks,
-      notes,
-      goals,
-      events,
-      expenses,
-    } = req.body;
+  message,
+  tasks,
+  notes,
+  goals,
+  events,
+  expenses,
+
+  currentDate,
+  currentTime,
+
+  completedTasks,
+  pendingTasks,
+  totalTasks,
+
+  totalExpenses,
+  totalGoals,
+  totalNotes,
+  totalEvents,
+} = req.body;
 
     const lowerMessage = message.toLowerCase();
    // ==========================
@@ -93,13 +105,25 @@ if (
     // AI
     // ==========================
     const aiResponse = await chat({
-      message,
-      tasks,
-      notes,
-      goals,
-      events,
-      expenses,
-    });
+  message,
+  tasks,
+  notes,
+  goals,
+  events,
+  expenses,
+
+  currentDate,
+  currentTime,
+
+  completedTasks,
+  pendingTasks,
+  totalTasks,
+
+  totalExpenses,
+  totalGoals,
+  totalNotes,
+  totalEvents,
+});
     // ==========================
 // SMART PLANNER
 // ==========================

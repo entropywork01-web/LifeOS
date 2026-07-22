@@ -46,33 +46,43 @@ function Notes() {
 
   return (
     <Layout>
-      <h1>My Notes 📝</h1>
+      <div className="notes-summary">
 
-      <p
-        style={{
-          color: "#94A3B8",
-          marginBottom: "20px",
-        }}
-      >
-        Total Notes: {notes.length}
-      </p>
+  <h2>📝 My Notes</h2>
 
-      <div className="task-input">
-        <input
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              addNote();
-            }
-          }}
-          placeholder="Write a note..."
-        />
+  <h1 className="notes-total">
+    {notes.length}
+  </h1>
 
-        <button onClick={addNote}>
-          Add
-        </button>
-      </div>
+  <p>
+    {notes.length === 1 ? "Note" : "Notes"} Saved
+  </p>
+
+</div>
+     <div className="note-input-card">
+
+  <h2>➕ Add New Note</h2>
+
+  <div className="note-input-row">
+
+    <input
+      value={note}
+      onChange={(e) => setNote(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          addNote();
+        }
+      }}
+      placeholder="Write something important..."
+    />
+
+    <button onClick={addNote}>
+      ➕ Add Note
+    </button>
+
+  </div>
+
+</div>
 
       <input
         type="text"
@@ -88,41 +98,64 @@ function Notes() {
       />
 
       <div className="task-list">
-        {filteredNotes.map((item) => (
-          <div
-            className="dashboard-box"
-            key={item.id}
+
+  {filteredNotes.length === 0 ? (
+
+    <div className="empty-state">
+
+      <div className="empty-icon">📝</div>
+
+      <h2>No notes yet</h2>
+
+      <p>
+        Capture your ideas by creating your first note.
+      </p>
+
+    </div>
+
+  ) : (
+
+    filteredNotes.map((item) => (
+
+      <div className="note-card" key={item.id}>
+
+        <div className="note-header">
+
+          <h3>
+            {item.pinned ? "📌 Pinned Note" : "📝 Note"}
+          </h3>
+
+        </div>
+
+        <p className="note-text">
+          {item.text}
+        </p>
+
+        <div className="note-actions">
+
+          <button
+            className="pin-btn"
+            onClick={() => togglePin(item.id)}
           >
-            <p
-              style={{
-                fontSize: "16px",
-                marginBottom: "15px",
-              }}
-            >
-              {item.text}
-            </p>
+            {item.pinned ? "📌 Unpin" : "📍 Pin"}
+          </button>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-              }}
-            >
-              <button
-                onClick={() => togglePin(item.id)}
-              >
-                {item.pinned ? "📌 Pinned" : "📍 Pin"}
-              </button>
+          <button
+            className="delete-btn"
+            onClick={() => deleteNote(item.id)}
+          >
+            🗑 Delete
+          </button>
 
-              <button
-                onClick={() => deleteNote(item.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+        </div>
+
       </div>
+
+    ))
+
+  )}
+
+</div>
     </Layout>
   );
 }

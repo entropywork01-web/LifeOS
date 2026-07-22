@@ -1,5 +1,5 @@
-import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useState, useContext } from "react";
 import Layout from "../components/Layout";
@@ -12,7 +12,9 @@ function Expenses() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Food");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(
+  new Date().toISOString().split("T")[0]
+);
 
   const totalExpenses = expenses.reduce(
     (sum, item) => sum + item.amount,
@@ -52,91 +54,116 @@ function Expenses() {
 
   return (
     <Layout>
-      <div className="dashboard">
+      <div className="expenses-page">
         <h1>Expenses 💰</h1>
 
-        <div className="total-expenses-card">
-          <h2>💰 Total Spent</h2>
-          <h1>₹{totalExpenses}</h1>
-          <p>
-            {expenses.length} expense
-            {expenses.length !== 1 ? "s" : ""} recorded
-          </p>
+        <div className="expense-summary">
+          <h2>💳 Total Spending</h2>
+         <h1 className="expense-total">₹{totalExpenses}</h1>
+          <p className="expense-count">
+  {expenses.length} expense
+  {expenses.length !== 1 ? "s" : ""} recorded
+</p>
         </div>
 
-         <Card> 
+        <Card className="add-expense-box">
 
-          <input
-            type="number"
-            placeholder="Amount (₹)"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+  <h2>Add New Expense</h2>
 
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+  <div className="expense-form">
 
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option>Food</option>
-            <option>Transport</option>
-            <option>Shopping</option>
-            <option>Bills</option>
-            <option>Health</option>
-            <option>Education</option>
-            <option>Other</option>
-          </select>
+    <input
+      type="number"
+      placeholder="Amount (₹)"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      onKeyDown={(e) => e.key === "Enter" && addExpense()}
+    />
 
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-<Button onClick={addExpense}>
-  Add Expense
-</Button>
+    <input
+      placeholder="Description"
+      value={description}
+      onChange={(e) => setDescription(e.target.value)}
+      onKeyDown={(e) => e.key === "Enter" && addExpense()}
+    />
+
+    <select
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+    >
+      <option>Food</option>
+      <option>Transport</option>
+      <option>Shopping</option>
+      <option>Bills</option>
+      <option>Health</option>
+      <option>Education</option>
+      <option>Other</option>
+    </select>
+
+    <input
+      type="date"
+      value={date}
+      onChange={(e) => setDate(e.target.value)}
+    />
+
+  </div>
+
+  <Button onClick={addExpense}>
+    ➕ Add Expense
+  </Button>
 
 </Card>
 
-        <div className="card">
-          <h2>Your Expenses</h2>
+       <div className="expense-list">
 
-          {expenses.length === 0 ? (
-            <p>No expenses added yet.</p>
-          ) : (
-            expenses.map((item) => (
-              <div key={item.id} className="dashboard-box">
+  <h2>💳 Recent Expenses</h2>
 
-                <h3>₹{item.amount}</h3>
+  {expenses.length === 0 ? (
+  <div className="empty-state">
+  <div className="empty-icon">💸</div>
 
-                <p>
-                  <strong>Description:</strong> {item.description}
-                </p>
+  <h2>No expenses yet</h2>
 
-                <p>
-                  <strong>Category:</strong> {item.category}
-                </p>
+  <p>
+    Start tracking your spending by adding your first expense.
+  </p>
+</div>
+  ) : (
+    expenses.map((item) => (
+      <div key={item.id} className="expense-card">
 
-                <p>
-                  <strong>Date:</strong> {item.date}
-                </p>
+        <div>
+          <h3>{item.description}</h3>
 
-                <button onClick={() => deleteExpense(item.id)}>
-                  Delete
-                </button>
+         <p>
+  {item.category === "Food" && "🍔 "}
+  {item.category === "Transport" && "🚌 "}
+  {item.category === "Shopping" && "🛍️ "}
+  {item.category === "Bills" && "📄 "}
+  {item.category === "Health" && "🏥 "}
+  {item.category === "Education" && "📚 "}
+  {item.category === "Other" && "📌 "}
 
-              </div>
-            ))
-          )}
-
+  {item.category} • {item.date}
+</p>
         </div>
 
+        <div className="expense-actions">
+          <h3>₹{item.amount}</h3>
+
+         <button
+  className="delete-btn"
+  onClick={() => deleteExpense(item.id)}
+>
+  🗑 Delete
+</button>
+        </div>
+
+      </div>
+    ))
+  )}
+
+</div>
       </div>
     </Layout>
   );

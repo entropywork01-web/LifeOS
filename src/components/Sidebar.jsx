@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+
   const menuItems = [
     { icon: "🏠", title: "Dashboard", path: "/dashboard" },
     { icon: "✅", title: "Tasks", path: "/tasks" },
@@ -8,15 +11,26 @@ function Sidebar() {
     { icon: "📅", title: "Calendar", path: "/calendar" },
     { icon: "🎯", title: "Goals", path: "/goals" },
     { icon: "💰", title: "Expenses", path: "/expenses" },
+    { icon: "📊", title: "Analytics", path: "/analytics" },
     { icon: "🤖", title: "AI Assistant", path: "/assistant" },
   ];
 
   return (
-    <aside className="sidebar">
+    <aside className={collapsed ? "sidebar collapsed" : "sidebar"}>
+      <button
+        className="collapse-btn"
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        {collapsed ? "➡" : "⬅"}
+      </button>
 
       <div className="sidebar-logo">
-        <h1>LifeOS</h1>
-        <p>Your Personal OS</p>
+        {!collapsed && (
+          <>
+            <h1>LifeOS</h1>
+            <p>Your Personal OS</p>
+          </>
+        )}
       </div>
 
       <nav className="sidebar-menu">
@@ -30,22 +44,27 @@ function Sidebar() {
           >
             <span className="sidebar-icon">{item.icon}</span>
 
-            <span>{item.title}</span>
+            {!collapsed && (
+              <span className="sidebar-text">{item.title}</span>
+            )}
           </NavLink>
         ))}
       </nav>
 
       <div className="sidebar-footer">
-        <div className="streak-card">
-          <h3>🔥 Daily Streak</h3>
-          <p>12 Days</p>
-        </div>
+        {!collapsed && (
+          <>
+            <div className="streak-card">
+              <h3>🔥 Daily Streak</h3>
+              <p>12 Days</p>
+            </div>
 
-        <p className="version">
-          LifeOS v0.5
-        </p>
+            <p className="version">
+              LifeOS v0.5
+            </p>
+          </>
+        )}
       </div>
-
     </aside>
   );
 }

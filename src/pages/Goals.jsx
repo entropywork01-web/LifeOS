@@ -42,47 +42,106 @@ function Goals() {
 
   return (
     <Layout>
-      <h1>🎯 My Goals</h1>
+      <div className="goal-summary">
 
-      <div className="task-input">
-        <input
-          value={goal}
-          onChange={(e) => setGoal(e.target.value)}
-          placeholder="Enter a new goal..."
-        />
+  <h2>🎯 My Goals</h2>
 
-        <button onClick={addGoal}>
-          Add Goal
-        </button>
-      </div>
+  <h1 className="goal-total">
+    {goals.length}
+  </h1>
 
-      <div className="task-list">
-        {goals.map((item) => (
-          <div
-            className="dashboard-box"
-            key={item.id}
-          >
-            <h3>{item.title}</h3>
+  <p>
+    {goals.length === 1
+      ? "Goal"
+      : "Goals"} Created
+  </p>
 
-            <p style={{ margin: "10px 0" }}>
-              Progress: {item.progress}%
+</div>
+
+     <div className="goal-input-card">
+
+  <h2>➕ Add New Goal</h2>
+
+  <div className="goal-input-row">
+
+    <input
+      value={goal}
+      onChange={(e) => setGoal(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          addGoal();
+        }
+      }}
+      placeholder="What's your next goal?"
+    />
+
+    <button onClick={addGoal}>
+      ➕ Add Goal
+    </button>
+
+  </div>
+
+</div>
+
+         <div className="task-list">
+
+        {goals.length === 0 ? (
+
+          <div className="empty-state">
+
+            <div className="empty-icon">🎯</div>
+
+            <h2>No goals yet</h2>
+
+            <p>
+              Add your first goal and start making progress.
             </p>
 
-            <button
-              onClick={() => increaseProgress(item.id)}
-            >
-              +10%
-            </button>
-
-            <button
-              style={{ marginLeft: "10px" }}
-              onClick={() => deleteGoal(item.id)}
-            >
-              Delete
-            </button>
           </div>
-        ))}
+
+        ) : (
+
+          goals.map((item) => (
+
+            <div className="goal-card" key={item.id}>
+
+              <h3>{item.title}</h3>
+
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${item.progress}%` }}
+                ></div>
+              </div>
+
+              <p>{item.progress}% Complete</p>
+
+              <div className="goal-buttons">
+
+                <button
+                  className="progress-btn"
+                  onClick={() => increaseProgress(item.id)}
+                >
+                  +10%
+                </button>
+
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteGoal(item.id)}
+                >
+                  🗑 Delete
+                </button>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
       </div>
+
     </Layout>
   );
 }

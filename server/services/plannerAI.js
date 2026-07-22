@@ -15,11 +15,10 @@ async function generateDailyPlan(data) {
 
     const today = new Date().toDateString();
 
-    const prompt = `
-You are LifeOS AI.
+  const prompt = `
+You are LifeOS AI, an intelligent personal productivity coach.
 
 Today is:
-
 ${today}
 
 User Data:
@@ -36,19 +35,45 @@ ${JSON.stringify(events, null, 2)}
 Expenses:
 ${JSON.stringify(expenses, null, 2)}
 
-Create a daily plan.
+Create an actionable daily plan.
 
 Rules:
 
-- Keep it under 150 words.
-- Suggest the most important tasks first.
-- Mention today's events if any.
-- Mention active goals if relevant.
-- Give ONE productivity tip.
-- Use Indian Rupees (₹) if mentioning money.
-- Return plain text only.
-`;
+- Keep the response under 180 words.
+- Start with a heading: 🎯 Today's Mission
+- Choose ONE highest-impact task as today's mission.
+- Briefly explain why this task is the priority.
+- Mention any events happening today.
+- Connect today's work to the user's goals whenever possible.
+- Include 3 short action steps.
+- End with one motivational productivity tip.
+- If expenses are unusually high, remind the user to be mindful of spending.
+- Use ₹ for money.
+- Write in a friendly, motivating tone.
+Return ONLY valid JSON.
 
+Use this exact format:
+
+{
+  "mission": "",
+  "reason": "",
+  "priority": "",
+  "estimatedTime": "",
+  "firstStep": "",
+  "plan": ""
+}
+
+Rules:
+- mission: One highest-impact task.
+- reason: Explain why it is today's priority.
+- priority: Low, Medium, High, or Critical.
+- estimatedTime: Estimated completion time.
+- firstStep: One small action to begin.
+- plan: Daily plan under 120 words.
+- Do not include markdown.
+- Do not include code fences.
+- Do not include any extra text.
+`;
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [

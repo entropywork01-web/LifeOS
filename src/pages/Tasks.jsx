@@ -47,129 +47,158 @@ function Tasks() {
 
   return (
     <Layout>
-      <h1>My Tasks ✅</h1>
+<h1 className="page-title">
+  Tasks ✅
+</h1>
 
-      <p
-        style={{
-          color: "#94A3B8",
-          marginBottom: "20px",
-        }}
-      >
-        Completed {tasks.filter((task) => task.completed).length} of{" "}
-        {tasks.length} tasks
-      </p>
+<div className="task-summary-card">
 
-      <div className="task-input">
-        <input
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              addTask();
-            }
-          }}
-          placeholder="Add a new task..."
-        />
+  <h2>📝 Total Tasks</h2>
 
-        <select
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-        >
-          <option value="High">🔴 High</option>
-          <option value="Medium">🟡 Medium</option>
-          <option value="Low">🟢 Low</option>
-        </select>
+  <h1>{tasks.length}</h1>
 
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
+  <p>
+    {tasks.filter(task => task.completed).length} Completed
+    &nbsp; • &nbsp;
+    {tasks.filter(task => !task.completed).length} Pending
+  </p>
 
-        <button onClick={addTask}>Add</button>
+</div>
+<div className="task-input-card">
+
+  <h2>Add New Task</h2>
+
+  <div className="task-form">
+
+    <input
+      value={task}
+      onChange={(e) => setTask(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") addTask();
+      }}
+      placeholder="Task title"
+    />
+
+    <select
+      value={priority}
+      onChange={(e) => setPriority(e.target.value)}
+    >
+      <option value="High">🔴 High</option>
+      <option value="Medium">🟡 Medium</option>
+      <option value="Low">🟢 Low</option>
+    </select>
+
+    <input
+      type="date"
+      value={dueDate}
+      onChange={(e) => setDueDate(e.target.value)}
+    />
+
+    <button onClick={addTask}>
+      ➕ Add Task
+    </button>
+
+  </div>
+
+</div>
+
+     <div className="search-box">
+
+  <input
+    type="text"
+    placeholder="🔍 Search your notes..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
+
+</div>
+
+      <div className="task-filters">
+
+  <button
+    className={filter === "All" ? "active" : ""}
+    onClick={() => setFilter("All")}
+  >
+    All
+  </button>
+
+  <button
+    className={filter === "Active" ? "active" : ""}
+    onClick={() => setFilter("Active")}
+  >
+    Active
+  </button>
+
+  <button
+    className={filter === "Completed" ? "active" : ""}
+    onClick={() => setFilter("Completed")}
+  >
+    Completed
+  </button>
+
+</div>
+      
+          <div className="task-list">
+
+  {tasks
+    .filter((item) =>
+      item.text.toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((item) => {
+      if (filter === "Active") return !item.completed;
+      if (filter === "Completed") return item.completed;
+      return true;
+    })
+    .map((item) => (
+
+      <div className="task-card" key={item.id}>
+
+        <div className="task-top">
+
+          <input
+            type="checkbox"
+            checked={item.completed}
+            onChange={() => toggleTask(item.id)}
+          />
+
+          <h3
+            style={{
+              textDecoration: item.completed
+                ? "line-through"
+                : "none",
+            }}
+          >
+            {item.text}
+          </h3>
+
+        </div>
+
+        <div className="task-bottom">
+
+          <span
+            className={`priority ${item.priority.toLowerCase()}`}
+          >
+            {item.priority}
+          </span>
+
+          <span className="due-date">
+            📅 {item.dueDate || "No due date"}
+          </span>
+
+          <button
+            className="delete-task"
+            onClick={() => deleteTask(item.id)}
+          >
+            🗑 Delete
+          </button>
+
+        </div>
+
       </div>
 
-      <input
-        type="text"
-        placeholder="🔍 Search tasks..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px",
-          margin: "20px 0",
-          borderRadius: "8px",
-        }}
-      />
+    ))}
 
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          marginBottom: "20px",
-        }}
-      >
-        <button onClick={() => setFilter("All")}>All</button>
-        <button onClick={() => setFilter("Active")}>Active</button>
-        <button onClick={() => setFilter("Completed")}>Completed</button>
-      </div>
-
-      <div className="task-list">
-        {tasks
-          .filter((item) =>
-            item.text.toLowerCase().includes(search.toLowerCase())
-          )
-          .filter((item) => {
-            if (filter === "Active") return !item.completed;
-            if (filter === "Completed") return item.completed;
-            return true;
-          })
-          .map((item) => (
-            <div className="dashboard-box" key={item.id}>
-              <span
-                onClick={() => toggleTask(item.id)}
-                style={{
-                  textDecoration: item.completed
-                    ? "line-through"
-                    : "none",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                }}
-              >
-                {item.text}
-              </span>
-
-              <p
-                style={{
-                  marginTop: "10px",
-                  color:
-                    item.priority === "High"
-                      ? "#ef4444"
-                      : item.priority === "Medium"
-                      ? "#f59e0b"
-                      : "#22c55e",
-                  fontWeight: "bold",
-                }}
-              >
-                {item.priority} Priority
-              </p>
-
-              <p
-                style={{
-                  color: "#94A3B8",
-                  marginBottom: "15px",
-                }}
-              >
-                📅 Due: {item.dueDate || "No due date"}
-              </p>
-
-              <button onClick={() => deleteTask(item.id)}>
-                Delete
-              </button>
-            </div>
-          ))}
-      </div>
+</div>
     </Layout>
   );
 }

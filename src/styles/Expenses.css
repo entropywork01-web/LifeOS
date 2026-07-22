@@ -1,109 +1,299 @@
-.dashboard-page {
-  display: flex;
-  min-height: 100vh;
-  background: #0F172A;
+.expenses-page {
+  padding: 40px;
   color: white;
 }
 
-.sidebar {
-  width: 260px;
-  background: #111827;
-  padding: 30px 20px;
+
+/* Title */
+
+.expenses-page h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 35px;
 }
 
-.sidebar h2 {
-  margin-bottom: 40px;
-  font-size: 28px;
+
+/* Total Card */
+
+.expense-summary {
+  background: linear-gradient(135deg, #3b82f6, #7c3aed);
+  border-radius: 28px;
+  padding: 40px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  margin-bottom: 35px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.sidebar ul {
-  list-style: none;
+.expense-summary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0,0,0,.4);
 }
-
-.sidebar li {
-  padding: 14px 16px;
+.expense-summary h2 {
+  font-size: 2rem;
   margin-bottom: 10px;
-  border-radius: 12px;
+  font-weight: 700;
+}
+
+.expense-summary h3 {
+  font-size:1.3rem;
+  color:#ddd;
+}
+
+
+.expense-total {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #4ade80;
+  margin: 15px 0;
+}
+
+.expense-count {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+}
+
+/* Add Expense Box */
+
+
+.add-expense-box {
+
+margin-top:30px;
+
+background:rgba(255,255,255,.06);
+
+padding:30px;
+
+border-radius:25px;
+
+display:flex;
+
+gap:15px;
+
+flex-wrap:wrap;
+
+border:1px solid rgba(255,255,255,.1);
+
+}
+
+
+.add-expense-box input,
+.add-expense-box select{
+
+background:#111827;
+
+border:1px solid #374151;
+
+color:white;
+
+padding:14px;
+
+border-radius:12px;
+
+font-size:15px;
+
+flex:1;
+
+}
+.add-expense-box button {
+    width: fit-content;
+    align-self: center;
+    margin-top: 20px;
+
+    background: #ef4444;
+    color: white;
+
+    padding: 14px 32px;
+
+    border: none;
+    border-radius: 14px;
+
+    font-weight: 700;
+    cursor: pointer;
+
+    transition: .3s;
+}
+.add-expense-box button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 10px 25px rgba(239,68,68,.4);
+
+}
+
+.expense-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+   gap: 20px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.expense-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 18px 35px rgba(0,0,0,.3);
+}
+
+
+.expense-card h3{
+
+font-size:1.5rem;
+
+color:#4ade80;
+
+}
+
+
+.expense-card p{
+
+color:#cbd5e1;
+.add-expense-box {
+    padding: 30px;
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-expense-box h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: white;
+    font-weight: 700;
+}
+
+.expense-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.expense-form input,
+.expense-form select {
+  transition: all 0.3s ease;
+    width: 100%;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.06);
+    color: white;
+    font-size: 15px;
+}
+
+.expense-form input:focus,
+.expense-form select:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 12px rgba(96,165,250,.35);
+  transform: translateY(-2px);
+}
+.expense-list {
+  margin-top: 35px;
+}
+.expense-card h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.expense-card p {
+  margin-top: 8px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.expense-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.expense-actions h3 {
+  color: #22c55e;
+  font-size: 2rem;
+  font-weight: 800;
+}
+.expense-actions button {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.sidebar li:hover {
-  background: rgba(255,255,255,0.08);
+.expense-actions button:hover {
+  background: #dc2626;
 }
-
-.dashboard-content {
-  flex: 1;
-  padding: 40px;
-}
-
-.dashboard-content h1 {
-  margin-bottom: 30px;
-}
-
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.dashboard-box {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 30px;
-  min-height: 180px;
-  transition: 0.3s;
-}
-
-.dashboard-box:hover {
-  transform: translateY(-5px);
-}
-.total-expenses-card {
-  background: #1e293b;
-  color: white;
-  padding: 20px;
-  border-radius: 16px;
-  margin: 20px 0;
-  font-size: 24px;
-  font-weight: bold;
+.empty-state {
   text-align: center;
-  border: 1px solid #334155;
-}
-.card {
-  background: #1e293b;
-  border-radius: 18px;
-  padding: 24px;
-  margin-bottom: 24px;
-  border: 1px solid #334155;
+  padding: 60px 20px;
+  color: #bdbdbd;
 }
 
-.card input,
-.card select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 14px;
-  border-radius: 10px;
-  border: 1px solid #475569;
-  background: #0f172a;
+.empty-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.empty-state h2 {
+  margin-bottom: 10px;
   color: white;
-  font-size: 15px;
-  box-sizing: border-box;
 }
-
-.card button {
-  width: 100%;
-  padding: 12px;
-  background: #3b82f6;
+.delete-btn {
+  background: #ef4444;
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 8px 14px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.card button:hover {
-  background: #2563eb;
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(220,38,38,.35);
+}
+.expense-card {
+  animation: fadeUp .4s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expense-summary,
+.add-expense-box,
+.expense-card {
+  animation: fadeUp 0.5s ease;
+}
 }

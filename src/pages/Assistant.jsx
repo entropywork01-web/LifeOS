@@ -1,23 +1,24 @@
-import { useState, useRef, useEffect, useContext } from "react";
-import { LifeOSContext } from "../context/LifeOSContext";
+import { useState, useEffect, useRef, useContext } from "react";
 import Layout from "../components/Layout";
-import "../styles/Dashboard.css";
+import { LifeOSContext } from "../context/LifeOSContext";
+import "../styles/Assistant.css";
 
 function Assistant() {
-const {
-  tasks,
-  notes,
-  goals,
-  events,
-  expenses,
-  setTasks,
-  setNotes,
-  setGoals,
-  setEvents,
-  setExpenses,
-} = useContext(LifeOSContext);
+  const {
+    tasks,
+    notes,
+    goals,
+    events,
+    expenses,
+    setTasks,
+    setNotes,
+    setGoals,
+    setEvents,
+    setExpenses,
+  } = useContext(LifeOSContext);
 
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [chat, setChat] = useState(() => {
   const saved = localStorage.getItem("lifeos_chat");
@@ -30,7 +31,7 @@ const {
     {
       id: 1,
       sender: "AI",
-      text: "👋 Hello! I'm your LifeOS Assistant.\n\nHow can I help you today?",
+      text: "👋 Hey Saniya! Good to see you again.\nWhat are we working on today? 🚀",
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -38,7 +39,7 @@ const {
     },
   ];
 });
-
+    
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -46,309 +47,366 @@ const {
       behavior: "smooth",
     });
   }, [chat]);
+
   useEffect(() => {
-  localStorage.setItem(
-    "lifeos_chat",
-    JSON.stringify(chat)
-  );
-}, [chat]);
+    localStorage.setItem(
+      "lifeos_chat",
+      JSON.stringify(chat)
+    );
+  }, [chat]);
 
+  function clearChat() {
+    localStorage.removeItem("lifeos_chat");
+
+    setChat([
+      {
+        id: 1,
+        sender: "AI",
+        text:
+          "👋 Welcome back!\n\nI'm your LifeOS AI Assistant.\n\nHow can I help you today?",
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
+  }
   async function sendMessage(customMessage = null) {
-    const typingId = Date.now() + 100;
+  const text = customMessage || message;
 
-setChat((prev) => [
-  ...prev,
-  {
-    id: typingId,
-    sender: "AI",
-    text: "⏳ Thinking...",
+  if (!text.trim()) return;
+
+  const userMessage = {
+    id: Date.now(),
+    sender: "You",
+    text,
     time: new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     }),
-  },
-]);
-    const text = customMessage || message;
+  };
 
-if (text.trim() === "") return;
+  setChat((prev) => [...prev, userMessage]);
 
-    const userMessage = {
-      id: Date.now(),
-      sender: "You",
-     text,
+  setMessage("");
+  setIsLoading(true);
+
+  const typingId = Date.now() + 1000;
+
+  setChat((prev) => [
+    ...prev,
+    {
+      id: typingId,
+      sender: "AI",
+      typing: true,
+      text: "",
+      time: "",
+    },
+  ]);
+
+  try {
+    const response = await fetch("http://localhost:5000/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+  message: text,
+
+  tasks,
+  notes,
+  goals,
+  events,
+  expenses,
+
+  currentDate: new Date().toLocaleDateString(),
+
+  currentTime: new Date().toLocaleTimeString(),
+
+  completedTasks: tasks.filter(t => t.completed).length,
+
+  pendingTasks: tasks.filter(t => !t.completed).length,
+
+  totalTasks: tasks.length,
+
+  totalExpenses: expenses.reduce(
+    (sum, e) => sum + Number(e.amount || 0),
+    0
+  ),
+
+  totalGoals: goals.length,
+
+  totalNotes: notes.length,
+
+  totalEvents: events.length,
+}),
+    });
+
+    const data = await response.json();
+
+    console.log("AI Response:", data);
+
+    if (data.action === "createTask" && data.task) {
+      setTasks((prev) => [...prev, data.task]);
+    }
+
+    if (data.action === "deleteTask" && data.taskIds) {
+      setTasks((prev) =>
+        prev.filter((task) => !data.taskIds.includes(task.id))
+      );
+    }
+
+    if (data.action === "completeTask" && data.taskId) {
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === data.taskId
+            ? { ...task, completed: true }
+            : task
+        )
+      );
+    }
+
+    if (data.action === "updateTask") {
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === data.taskId
+            ? { ...task, text: data.newText }
+            : task
+        )
+      );
+    }
+
+    if (data.action === "createNote" && data.note) {
+      setNotes((prev) => [...prev, data.note]);
+    }
+
+    if (data.action === "createGoal" && data.goal) {
+      setGoals((prev) => [...prev, data.goal]);
+    }
+
+    if (data.action === "createEvent" && data.event) {
+      setEvents((prev) => [...prev, data.event]);
+    }
+
+    if (data.action === "createExpense" && data.expense) {
+      setExpenses((prev) => [...prev, data.expense]);
+    }
+
+    const aiMessage = {
+      id: Date.now() + 2,
+      sender: "AI",
+      text: data.reply || "Done!",
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       }),
     };
 
-    setChat((prev) => [...prev, userMessage]);
-    setMessage("");
+    setChat((prev) => [
+      ...prev.filter((msg) => msg.id !== typingId),
+      aiMessage,
+    ]);
+  } catch (err) {
+    console.error(err);
 
-    try {
-      const response = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: text,
-          tasks,
-          notes,
-          goals,
-          events,
-          expenses,
-        }),
-      });
-
-      
-
-      const data = await response.json();
-
-console.log("AI Response:", data);
-
-// ==========================
-// CREATE TASK
-// ==========================
-if (data.action === "createTask" && data.task) {
-  setTasks((prev) => [...prev, data.task]);
-}
-
-// ==========================
-// DELETE TASK
-// ==========================
-if (data.action === "deleteTask" && data.taskIds) {
-  setTasks((prev) =>
-    prev.filter(
-      (task) => !data.taskIds.includes(task.id)
-    )
-  );
-}
-
-// ==========================
-// COMPLETE TASK
-// ==========================
-if (data.action === "completeTask" && data.taskId) {
-  setTasks((prev) =>
-    prev.map((task) =>
-      task.id === data.taskId
-        ? { ...task, completed: true }
-        : task
-    )
-  );
-}
-// ==========================
-// UPDATE TASK
-// ==========================
-if (data.action === "updateTask") {
-  setTasks((prev) =>
-    prev.map((task) =>
-      task.id === data.taskId
-        ? { ...task, text: data.newText }
-        : task
-    )
-  );
-}
-
-// ==========================
-// CREATE NOTE
-// ==========================
-if (data.action === "createNote" && data.note) {
-  setNotes((prev) => [...prev, data.note]);
-}
-
-// ==========================
-// CREATE GOAL
-// ==========================
-if (data.action === "createGoal" && data.goal) {
-  setGoals((prev) => [...prev, data.goal]);
-}
-
-// ==========================
-// CREATE EVENT
-// ==========================
-if (data.action === "createEvent" && data.event) {
-  setEvents((prev) => [...prev, data.event]);
-}
-
-// ==========================
-// CREATE EXPENSE
-// ==========================
-if (data.action === "createExpense" && data.expense) {
-  setExpenses((prev) => [...prev, data.expense]);
-}
-      const aiMessage = {
-        id: Date.now() + 1,
+    setChat((prev) => [
+      ...prev.filter((msg) => msg.id !== typingId),
+      {
+        id: Date.now(),
         sender: "AI",
-        text: data.reply || "Done!",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-
-      setChat((prev) => [
-  ...prev.filter((msg) => msg.id !== typingId),
-  aiMessage,
-]);
-    } catch (error) {
-      console.error(error);
-
-      const aiMessage = {
-        id: Date.now() + 1,
-        sender: "AI",
-        text: "❌ Could not connect to the backend.",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-
-      setChat((prev) => [
-  ...prev.filter((msg) => msg.id !== typingId),
-  aiMessage,
-]);
-    }
+        text: "❌ Couldn't connect to the backend.",
+        time: "",
+      },
+    ]);
   }
 
-  function handleKeyDown(e) {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
-  }
-function clearChat() {
-  localStorage.removeItem("lifeos_chat");
-
-  setChat([
-    {
-      id: 1,
-      sender: "AI",
-      text: "👋 Hello! I'm your LifeOS Assistant.\n\nHow can I help you today?",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    },
-  ]);
+  setIsLoading(false);
 }
-  return (
-    <Layout>
-      <div className="dashboard">
-        <div className="hero-section">
-          <h1>🤖 LifeOS Assistant</h1>
-          <p className="hero-subtitle">
-            Your personal AI assistant for tasks, notes, goals, events, and expenses.
-          </p>
-          <div style={{ marginTop: "20px" }}>
-    <button
-      onClick={clearChat}
-      style={{
-        width: "auto",
-        padding: "10px 18px",
-        background: "#dc2626",
-        border: "none",
-        borderRadius: "10px",
-        color: "white",
-        cursor: "pointer",
-      }}
-    >
-      🗑️ Clear Chat
-    </button>
+function handleKeyDown(e) {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+}
+
+function startListening() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Speech Recognition is not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-IN";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+
+    setMessage(transcript);
+
+    setTimeout(() => {
+      sendMessage(transcript);
+    }, 200);
+  };
+
+  recognition.onerror = (event) => {
+    console.error(event.error);
+  };
+
+  recognition.start();
+}
+
+return (
+  <Layout>
+    <div className="assistant-page">
+
+      {/* Sidebar */}
+      <div className="assistant-sidebar">
+
+        <h2>⚡ Quick Actions</h2>
+
+        <button onClick={() => sendMessage("What should I do today?")}>
+          📅 Today's Plan
+        </button>
+
+        <button onClick={() => sendMessage("Give me my weekly report")}>
+          📊 Weekly Report
+        </button>
+
+        <button onClick={() => sendMessage("What's my life score?")}>
+          🧠 Life Score
+        </button>
+
+        <button onClick={() => sendMessage("Start focus mode")}>
+          🎯 Focus Mode
+        </button>
+
+        <button onClick={() => sendMessage("Analyze my productivity")}>
+          📈 Productivity
+        </button>
+
+        <button
+          className="clear-btn"
+          onClick={clearChat}
+        >
+          🗑 Clear Chat
+        </button>
+
+      </div>
+
+      {/* Main Chat */}
+      <div className="assistant-main">
+
+       <div className="assistant-header">
+
+  <div>
+
+    <h1>🤖 LifeOS AI</h1>
+
+    <p>
+      Your intelligent productivity assistant
+    </p>
+
   </div>
 
-        </div>
+  <div className="assistant-status">
 
-        <div
-          className="card"
-          style={{
-            height: "70vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              paddingRight: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            {chat.map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  display: "flex",
-                  justifyContent:
-                    item.sender === "You" ? "flex-end" : "flex-start",
-                  marginBottom: "16px",
-                }}
-              >
-                <div
-                  style={{
-                    maxWidth: "75%",
-                    background:
-                      item.sender === "You" ? "#2563EB" : "#1E293B",
-                    color: "white",
-                    padding: "15px",
-                    borderRadius: "16px",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  <strong>
-                    {item.sender === "You" ? "🧑 You" : "🤖 LifeOS"}
-                  </strong>
+    <span className="status-dot"></span>
 
-                  <p
-                    style={{
-                      marginTop: "8px",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {item.text}
-                  </p>
+    Online
 
-                  <small
-                    style={{
-                      display: "block",
-                      marginTop: "10px",
-                      opacity: 0.7,
-                    }}
-                  >
-                    {item.time}
-                  </small>
-                </div>
-              </div>
-            ))}
+  </div>
 
-            <div ref={chatEndRef}></div>
-          </div>
+</div>
 
-          <div
-  style={{
-    display: "flex",
-    gap: "12px",
-  }}
->
-  {/* Quick Actions */}
-  
-  <div className="quick-actions">
-    <button onClick={() => sendMessage("What should I do today?")}>
-      📅 Today's Plan
+        <div className="chat-history">
+          {chat.length === 1 && (
+  <div className="welcome-cards">
+
+    <button onClick={() => sendMessage("Plan my day")}>
+      📅
+      <span>Plan my day</span>
     </button>
 
-    <button onClick={() => sendMessage("Show my pending tasks")}>
-      ✅ Pending Tasks
+    <button onClick={() => sendMessage("Analyze my productivity")}>
+      📈
+      <span>Analyze productivity</span>
     </button>
 
     <button onClick={() => sendMessage("Summarize my goals")}>
-      🎯 Goals
+      🎯
+      <span>Summarize goals</span>
     </button>
 
-    <button onClick={() => sendMessage("How much have I spent?")}>
-      💰 Expenses
+    <button onClick={() => sendMessage("Review my expenses")}>
+      💰
+      <span>Review expenses</span>
     </button>
+
   </div>
+)}
+          {chat.map((item) => (
+  <div
+    key={item.id}
+    className={
+      item.sender === "You"
+        ? "message user"
+        : "message ai"
+    }
+  >
+    <div className="message-row">
+
+      <div className="avatar">
+        {item.sender === "You" ? "🧑" : "🤖"}
+      </div>
+
+      <div>
+
+        <div className="bubble">
+
+          {item.typing ? (
+            <div className="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          ) : (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              {item.text}
+            </div>
+          )}
+
+        </div>
+
+        {item.time && (
+          <small>{item.time}</small>
+        )}
+
+      </div>
+
+    </div>
+
+  </div>
+))}
+
+<div ref={chatEndRef}></div>
+
+</div>
+
+<div className="chat-input">
+
+  <button
+    className="mic-btn"
+    onClick={startListening}
+    disabled={isLoading}
+  >
+    🎤
+  </button>
 
   <input
     type="text"
@@ -356,21 +414,25 @@ function clearChat() {
     value={message}
     onChange={(e) => setMessage(e.target.value)}
     onKeyDown={handleKeyDown}
-    style={{ flex: 1 }}
+    disabled={isLoading}
   />
 
-    <button onClick={() => sendMessage()}>
-    Send 🚀
+  <button
+    className="send-btn"
+    onClick={() => sendMessage()}
+    disabled={isLoading}
+  >
+    {isLoading ? "Thinking..." : "➤"}
   </button>
 
-</div> {/* Input Row */}
+</div>
+              </div> {/* assistant-main */}
 
-</div> {/* Card */}
+    </div> {/* assistant-page */}
 
-</div> {/* Dashboard */}
+  </Layout>
+);
 
-</Layout>
-  );
 }
 
 export default Assistant;

@@ -1,86 +1,185 @@
+import { holidays } from "../data/holidays";
 import { useState, useContext } from "react";
+import ReactCalendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import Layout from "../components/Layout";
 import { LifeOSContext } from "../context/LifeOSContext";
 import "../styles/Dashboard.css";
 
-function Calendar() {
-  const [event, setEvent] = useState("");
+function CalendarPage() {
   const { events, setEvents } = useContext(LifeOSContext);
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [title, setTitle] = useState("");
+
   function addEvent() {
-    if (event.trim() === "") return;
+    if (!title.trim()) return;
 
-    setEvents([
-      ...events,
-      {
-        id: Date.now(),
-        text: event,
-      },
-    ]);
+    const newEvent = {
+      id: Date.now(),
+      title,
+      date: selectedDate.toISOString().split("T")[0],
+    };
 
-    setEvent("");
+    setEvents([...events, newEvent]);
+    setTitle("");
   }
 
   function deleteEvent(id) {
-    setEvents(
-      events.filter((item) => item.id !== id)
-    );
+    setEvents(events.filter((e) => e.id !== id));
   }
 
   return (
-    <div className="dashboard-page">
-      <aside className="sidebar">
-        <h2>LifeOS</h2>
+    <Layout>
+      <div className="calendar-page">
 
-        <ul>
-          <li>🏠 Dashboard</li>
-          <li>✅ Tasks</li>
-          <li>📝 Notes</li>
-          <li>📅 Calendar</li>
-          <li>💰 Expenses</li>
-          <li>🎯 Goals</li>
-          <li>🤖 AI Assistant</li>
-        </ul>
-      </aside>
+        {/* Summary */}
 
-      <main className="dashboard-content">
-        <h1>My Calendar 📅</h1>
+        <div className="calendar-summary">
 
-        <div className="task-input">
-          <input
-            value={event}
-            onChange={(e) => setEvent(e.target.value)}
-            placeholder="Add an event..."
-          />
+          <h2>📅 My Calendar</h2>
 
-          <button onClick={addEvent}>
-            Add
-          </button>
+          <h1>{events.length}</h1>
+
+          <p>
+            {events.length} Event
+            {events.length !== 1 ? "s" : ""} Scheduled
+          </p>
+
         </div>
 
-        <div className="task-list">
+        {/* Main Grid */}
 
-          {events.map((item) => (
-            <div
-              className="dashboard-box"
-              key={item.id}
-            >
+        <div className="calendar-grid">
 
-              <p>{item.text}</p>
+          {/* LEFT */}
+
+          <div>
+
+            <div className="calendar-card">
+
+              <ReactCalendar
+  value={selectedDate}
+  onChange={setSelectedDate}
+  tileContent={({ date, view }) => {
+    if (view !== "month") return null;
+
+    const day = date.toISOString().split("T")[0];
+
+    const holiday = holidays.find((h) => h.date === day);
+    const event = events.find((e) => e.date === day);
+
+    return (
+      <div className="calendar-tile-content">
+
+        {holiday && (
+          <div className="holiday-label">
+            {holiday.title}
+          </div>
+        )}
+
+        {event && (
+          <div className="event-label">
+            📌 {event.title}
+          </div>
+        )}
+
+      </div>
+    );
+  }}
+/>
+
+            </div>
+
+            <div className="calendar-card">
+
+              <h2>➕ Add Event</h2>
+
+              <input
+                type="text"
+                placeholder="Event title..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
 
               <button
-                onClick={() => deleteEvent(item.id)}
+                className="calendar-btn"
+                onClick={addEvent}
               >
-                Delete
+                Add Event
               </button>
 
             </div>
-          ))}
+
+          </div>
+
+          {/* RIGHT */}
+
+          <div className="calendar-card">
+
+            <h2>Upcoming Events</h2>
+
+            {[...holidays, ...events].length === 0 ? (
+
+              <div className="empty-state">
+
+                <div className="empty-icon">
+                  📅
+                </div>
+
+                <h3>No Events</h3>
+
+                <p>Add your first event.</p>
+
+              </div>
+
+            ) : (
+
+             [...holidays, ...events]
+
+  .sort(
+    (a, b) =>
+      new Date(a.date) -
+      new Date(b.date)
+  )
+
+  .map((event) => (
+
+                  <div
+                    key={event.id}
+                    className="event-card"
+                  >
+
+                    <div>
+
+                      <h3>{event.title}</h3>
+
+                      <p>{event.date}</p>
+
+                    </div>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        deleteEvent(event.id)
+                      }
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                ))
+
+            )}
+
+          </div>
 
         </div>
 
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 }
 
-export default Calendar;
+export default CalendarPage;

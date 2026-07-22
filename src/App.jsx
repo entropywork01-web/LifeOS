@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-
+import Analytics from "./pages/Analytics";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Calendar from "./pages/Calendar";
@@ -13,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
+      <Route path="/analytics" element={<Analytics />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/tasks" element={<Tasks />} />
       <Route path="/calendar" element={<Calendar />} />
