@@ -1,3 +1,67 @@
+
+# LifeOS
+
+## 📌 Project Status
+
+**Status:** Paused for NEET 2027 preparation.
+
+Last updated: July 2026
+
+---
+
+## ✅ Completed Features
+
+- Dashboard
+- Tasks
+- Notes
+- Calendar
+- Goals
+- Expenses
+- AI Assistant
+- Voice Input
+- LocalStorage persistence
+- GitHub integration
+- Vercel frontend setup
+
+---
+
+## ⚠️ Remaining Work
+
+- Fix Goals page UI
+- Complete Vercel deployment
+- Deploy Express backend
+- Connect production AI API
+- Final UI polish
+- Mobile responsiveness
+
+---
+
+## 🚀 To Resume Development
+
+```bash
+npm install
+npm run dev
+```
+
+For a production build:
+
+```bash
+npm run build
+```
+
+---
+
+## 📝 Notes
+
+- Backend is located in the `server` folder.
+- API keys are stored locally in `.env` (never commit them).
+- Repository contains a `backup-before-neet` branch.
+- Resume development after NEET 2027.
+
+---
+
+Good luck to future me. Finish this project. 🚀
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
